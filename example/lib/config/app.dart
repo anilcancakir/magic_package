@@ -1,8 +1,9 @@
+import 'package:app/app/providers/auth_service_provider.dart';
 import 'package:app/app/providers/router_service_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:magic/magic.dart';
 
-Map<String, dynamic> config = {
+Map<String, dynamic> appConfig = {
   /// Application Name
   'name': 'Magic',
 
@@ -17,6 +18,7 @@ Map<String, dynamic> config = {
   ],
 
   'providers': <ServiceProvider>[
-    new RouterServiceProvider()
+    new RouterServiceProvider(),
+    new AuthServiceProvider()
   ]
 };

@@ -2,8 +2,8 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
 import '../config/magic_config.dart';
+import '../contracts/support/service_provider.dart';
 import '../routing/base_routes.dart';
-import '../support/service_provider.dart';
 
 typedef Object MagicConcreteCallback(Magic magic);
 typedef void VoidCallback();
@@ -35,6 +35,9 @@ class Magic {
 
   /// Create a new magic application instance.
   Magic() {
+    // Set the instance
+    Magic._instance = this;
+
     this._registerCoreBindings();
   }
 
@@ -87,10 +90,14 @@ class Magic {
       providers.forEach((ServiceProvider serviceProvider) => this.register(serviceProvider));
     }
 
+    // Set the routes
+    List<BaseRoutes> routes = this.make<MagicConfig>().get('route.routes');
+    if (routes != null) {
+      this.registerRoutes(routes);
+    }
+
     // Boot the registered providers.
     this._serviceProviders.forEach(this._bootRegisterProvider);
-
-    this.router.printTree();
 
     // Run the app!
     runApp(new MaterialApp(

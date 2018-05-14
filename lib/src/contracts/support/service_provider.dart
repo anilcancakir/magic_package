@@ -1,4 +1,4 @@
-import '../foundation/magic.dart';
+import '../../foundation/magic.dart';
 
 abstract class ServiceProvider {
   /// Bootstrap any application services.
