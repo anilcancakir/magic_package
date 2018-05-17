@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../config/magic_config.dart';
 import '../contracts/auth/guard.dart';
 import '../foundation/magic.dart';
@@ -18,7 +20,27 @@ class Auth {
     return this._guard;
   }
 
+  Guard makeGuard(String key) {
+    return this.availableGuards[key];
+  }
+
   Map<String, Guard> get availableGuards {
     return this._magic.make<MagicConfig>().get('config.guards');
+  }
+
+  bool check() {
+    return this.guard.check();
+  }
+
+  bool guest() {
+    return !this.check();
+  }
+
+  dynamic user() {
+    return this.guard.user();
+  }
+
+  Future<String> getBearerToken() {
+    return this.guard.getBearerToken();
   }
 }

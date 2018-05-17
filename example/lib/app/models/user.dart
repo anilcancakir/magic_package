@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:magic/magic.dart';
 
 class User extends Model implements Authenticatable {
@@ -33,49 +35,78 @@ class User extends Model implements Authenticatable {
 
 abstract class Model {
   static String endpoint;
-  BaseDataProvider provider;
+  BaseDataReceiver provider;
   void setAttributes(Map<String, dynamic> data);
   dynamic getPrimaryKey();
 }
 
-abstract class BaseDataProvider {
-  String endpoint;
+class ApiDataReceiver extends BaseDataReceiver {
+  final String _endpoint;
 
-  Future<dynamic> index({Map<String, dynamic> queries});
+  ApiDataReceiver(this._endpoint);
 
-  Future<dynamic> get(dynamic identifier, {Map<String, dynamic> queries});
-
-  Future<dynamic> update(dynamic identifier, Map<String, dynamic> data);
-
-  Future<dynamic> create(Map<String, dynamic> data);
-
-  Future<bool> delete(dynamic identifier);
-}
-
-class DataProvider extends BaseDataProvider {
   @override
-  Future create(Map<String, dynamic> data) {
-    // TODO: implement create
+  Future<dynamic> create(Map<String, dynamic> data) async {
+    return await this._toMapFromResponse(
+      apiClient().put(this._makeUrl(), body: data)
+    );
   }
 
   @override
-  Future<bool> delete(identifier) {
-    // TODO: implement delete
+  Future<bool> delete(identifier) async {
+    try {
+      await apiClient().delete(
+        this._makeUrl(identifier: identifier)
+      );
+    } catch (e) {
+      return false;
+    }
+
+    return true;
   }
 
   @override
-  Future get(identifier, {Map<String, dynamic> queries}) {
-    // TODO: implement get
+  Future<dynamic> get(identifier, {Map<String, dynamic> queries}) async {
+    return await this._toMapFromResponse(
+      apiClient().put(this._makeUrl())
+    );
   }
 
   @override
-  Future index({Map<String, dynamic> queries}) {
-    // TODO: implement index
+  Future<List<dynamic>> index({Map<String, dynamic> queries}) async {
+    return await this._toMapFromResponse(
+      apiClient().get(
+        this._makeUrl(queries: queries)
+      )
+    );
   }
 
   @override
-  Future update(identifier, Map<String, dynamic> data) {
-    // TODO: implement update
+  Future<dynamic> update(identifier, Map<String, dynamic> data) async {
+    return await this._toMapFromResponse(
+      apiClient().post(
+        this._makeUrl(identifier: identifier), body: data
+      )
+    );
   }
 
+  String _makeUrl({String identifier, Map<String, dynamic> queries}) {
+    String url = config('api.url') + this._endpoint;
+    if (identifier != null) {
+      url += '/' + identifier;
+    }
+
+    if (queries != null) {
+      Uri uri = Uri.parse(url);
+      uri.replace(queryParameters: queries);
+      return url.toString();
+    }
+
+    return url;
+  }
+
+  Future<dynamic> _toMapFromResponse(Future<http.Response> request) async {
+    final response = await request;
+    return json.decode(response.body);
+  }
 }

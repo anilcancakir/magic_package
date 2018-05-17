@@ -1,11 +1,11 @@
-import 'package:magic/magic.dart';
+import 'package:app/app/auth/api_guard.dart';
 
 Map<String, dynamic> authConfig = {
   /// Default authentication guard
-  'default': 'basic',
+  'default': 'api',
 
   /// Authentication guards
   'guards': {
-    'basic': new BasicGuard()
+    'api': new ApiGuard()
   }
 };

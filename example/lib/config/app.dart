@@ -1,3 +1,4 @@
+import 'package:app/app/providers/api_service_provider.dart';
 import 'package:app/app/providers/auth_service_provider.dart';
 import 'package:app/app/providers/router_service_provider.dart';
 import 'package:flutter/widgets.dart';
@@ -19,6 +20,7 @@ Map<String, dynamic> appConfig = {
 
   'providers': <ServiceProvider>[
     new RouterServiceProvider(),
-    new AuthServiceProvider()
+    new AuthServiceProvider(),
+    new ApiServiceProvider()
   ]
 };
