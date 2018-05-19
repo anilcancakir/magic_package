@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'api/api_client.dart';
 import 'auth/auth.dart';
 import 'config/magic_config.dart';
 import 'contracts/auth/guard.dart';
-import 'contracts/support/base_date_receiver.dart';
+import 'data/base_data_receiver.dart';
 import 'foundation/magic.dart';
+
+typedef dynamic FetchModelMapCallback(dynamic data);
 
 /// Resolve the given type from the magic.
 T make<T>() {
@@ -33,4 +37,22 @@ BaseDataReceiver dataReceiver() {
 /// Get the current api client instance.
 ApiClient apiClient() {
   return make<ApiClient>();
+}
+
+/// Fetch the models by the given queries.
+Future<List<T>> fetchModels<T>(FetchModelMapCallback mapCallback, {Map<String, dynamic> queries}) async {
+  final List<T> models = new List<T>();
+
+  (await fetchItems(mapCallback(null).resourceKey(), queries: queries)).forEach((dynamic data) {
+    models.add(
+      mapCallback(data)
+    );
+  });
+
+  return models;
+}
+
+/// Fetch the data from the given resource key.
+Future<List<dynamic>> fetchItems(String resourceKey, {Map<String, dynamic> queries}) async {
+  return await dataReceiver().index(resourceKey, queries: queries);
 }

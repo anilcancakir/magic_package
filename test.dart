@@ -1,7 +1,12 @@
 main() {
-  String foo = '/foo';
-  String url = 'https://mynextmatch.atlassian.net/browse/MW-1162/';
+  Map<String, dynamic> a = {
+    'foo': 'bar',
+    'lorem': 'ipsum'
+  };
 
-  print(foo.startsWith('/'));
-  print(foo.substring(1));
+  Uri uri = Uri.parse('users');
+  print(uri.toString());
+
+  uri = uri.replace(queryParameters: a);
+  print(uri.toString());
 }
