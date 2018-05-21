@@ -69,10 +69,8 @@ class Magic {
 
   /// Boot the magic's service providers.
   void boot({
-    String name,
-    String env,
-    String locale,
-    Map<String, dynamic> config
+    Map<String, dynamic> config,
+    Map<String, dynamic> environment
   }) {
     if (this._booted) {
       return;
@@ -80,9 +78,6 @@ class Magic {
 
     // Set the configurations of app
     config.forEach((String key, dynamic value) => this._setConfigIfNotNull('app.$key', value));
-    this._setConfigIfNotNull('app.name', name);
-    this._setConfigIfNotNull('app.env', env);
-    this._setConfigIfNotNull('app.locale', locale);
 
     // Register the application providers.
     List<ServiceProvider> providers = this.make<MagicConfig>().get('app.providers');
@@ -98,6 +93,11 @@ class Magic {
 
     // Boot the registered providers.
     this._serviceProviders.forEach(this._bootRegisterProvider);
+
+    // Let's set the environment configurations
+    if (environment != null) {
+      environment.forEach((String key, dynamic value) => this._setConfigIfNotNull(key, value));
+    }
 
     // Run the app!
     runApp(new MaterialApp(
