@@ -13,7 +13,7 @@ class Auth {
   Guard get guard {
     if (this._guard == null) {
       this._guard = this.availableGuards[
-        this._magic.make<MagicConfig>().get('confug.default')
+        this._magic.make<MagicConfig>().get('auth.default')
       ];
     }
 
@@ -25,7 +25,7 @@ class Auth {
   }
 
   Map<String, Guard> get availableGuards {
-    return this._magic.make<MagicConfig>().get('config.guards');
+    return this._magic.make<MagicConfig>().get('auth.guards');
   }
 
   bool check() {

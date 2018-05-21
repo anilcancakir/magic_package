@@ -89,21 +89,16 @@ abstract class Model {
   /// Save the model to the database.
   Future<bool> save() async {
     if (this.isDirty()) {
-      try {
-        Map<String, dynamic> result;
-        if (this.exists) {
-          result = await dataReceiver().update(this.resourceKey(), this.getPrimaryKey().toString(), this._attributes);
-        } else {
-          result = await dataReceiver().create(this.resourceKey(), this._attributes);
-        }
+      Map<String, dynamic> result;
 
-        this._setAttributesAndOriginal(result);
-        return true;
-      } catch(e) {
-        print(e);
-
-        return false;
+      if (this.exists) {
+        result = await dataReceiver().update(this.resourceKey(), this.getPrimaryKey().toString(), this._toData);
+      } else {
+        result = await dataReceiver().create(this.resourceKey(), this._toData);
       }
+
+      this._setAttributesAndOriginal(result);
+      return true;
     }
 
     return new Future.value(false);
@@ -131,6 +126,18 @@ abstract class Model {
     }
 
     return true;
+  }
+
+  Map<String, dynamic> get _toData {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    this._attributes.forEach((String key, dynamic value) {
+      if (value != null) {
+        data[key] = value is String ? value : value.toString();
+      }
+    });
+
+    return data;
   }
 
   @override

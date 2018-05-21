@@ -4,12 +4,6 @@ class MagicConfig {
 
   /// Get the specified configuration value.
   dynamic get(String key) {
-    if (key == 'app.name') {
-      print(this._items);
-      print(key);
-      print(this._items[key]);
-    }
-
     return this._items[key];
   }
 

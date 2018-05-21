@@ -16,13 +16,13 @@ class IndexWidget extends StatelessWidget {
 
   void test() async {
     User user = await new User().find('skHSFN0A73R4U94QpU7TciiKMxU2');
-    user.set('name', 'Anil');
-    print(
-      await user.save()
-    );
+    print(user);
 
-    print(
-      await user.refresh()
-    );
+    user.set('name', 'Anilcan Cakir');
+    await user.save();
+
+    print(user);
+
+    fetchModels((data) => new User().make(data)).then(print);
   }
 }
