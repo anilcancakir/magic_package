@@ -9,6 +9,7 @@ import 'contracts/auth/guard.dart';
 import 'data/base_data_receiver.dart';
 import 'foundation/magic.dart';
 import 'lang/lang.dart';
+import 'validators/base_validator.dart';
 
 typedef dynamic FetchModelMapCallback(dynamic data);
 
@@ -63,4 +64,17 @@ Future<List<dynamic>> fetchItems(String resourceKey, {Map<String, dynamic> queri
 /// Translate the given key from the localization
 String trans(BuildContext context, String key, {Map<String, String> replaces}) {
   return Lang.of(context).trans(key, replaces: replaces);
+}
+
+// Let's validate!
+String validates(BuildContext context, Object value, String attribute, List<BaseValidator> validators) {
+  String result;
+
+  validators.takeWhile((BaseValidator validator) {
+    return result == null;
+  }).forEach((BaseValidator validator) {
+    result = validator.validate(context, value, attribute);
+  });
+
+  return result;
 }
