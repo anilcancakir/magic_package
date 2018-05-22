@@ -11,6 +11,11 @@ class IndexWidget extends StatelessWidget {
       appBar: new AppBar(title: new Text(
         config('app.name')
       )),
+      body: new Container(
+        child: new Center(
+          child: new Text(trans(context, 'hello_world')),
+        ),
+      ),
     );
   }
 

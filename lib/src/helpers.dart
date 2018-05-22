@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+
 import 'api/api_client.dart';
 import 'auth/auth.dart';
 import 'config/magic_config.dart';
 import 'contracts/auth/guard.dart';
 import 'data/base_data_receiver.dart';
 import 'foundation/magic.dart';
+import 'lang/lang.dart';
 
 typedef dynamic FetchModelMapCallback(dynamic data);
 
@@ -55,4 +58,9 @@ Future<List<T>> fetchModels<T>(FetchModelMapCallback mapCallback, {Map<String, d
 /// Fetch the data from the given resource key.
 Future<List<dynamic>> fetchItems(String resourceKey, {Map<String, dynamic> queries}) async {
   return await dataReceiver().index(resourceKey, queries: queries);
+}
+
+/// Translate the given key from the localization
+String trans(BuildContext context, String key, {Map<String, String> replaces}) {
+  return Lang.of(context).trans(key, replaces: replaces);
 }

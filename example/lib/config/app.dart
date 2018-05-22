@@ -13,10 +13,10 @@ Map<String, dynamic> appConfig = {
   'env': 'production',
 
   /// Application Locale Configuration
-  'locale': new Locale('en'),
+  'locale': new Locale('en', 'US'),
 
   'supportedLocales': [
-    new Locale('en')
+    new Locale('en', 'US')
   ],
 
   'providers': <ServiceProvider>[

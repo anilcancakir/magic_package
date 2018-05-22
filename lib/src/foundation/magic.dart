@@ -1,8 +1,10 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../config/magic_config.dart';
 import '../contracts/support/service_provider.dart';
+import '../lang/lang_delegate.dart';
 import '../routing/base_routes.dart';
 
 typedef Object MagicConcreteCallback(Magic magic);
@@ -105,6 +107,12 @@ class Magic {
       locale: this.make<MagicConfig>().get('app.locale'),
       onGenerateRoute: this.make<Router>().generator,
       supportedLocales: this.make<MagicConfig>().get('app.supportedLocales'),
+      localeResolutionCallback: this._localizationCallback,
+      localizationsDelegates: [
+        const LangDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ]
     ));
   }
 
@@ -141,5 +149,16 @@ class Magic {
     if (value != null) {
       this.make<MagicConfig>().set(key, value);
     }
+  }
+
+  /// Localization callback for application
+  Locale _localizationCallback(Locale locale, Iterable<Locale> supportedLocales) {
+    for (Locale supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode || supportedLocale.countryCode == locale.countryCode) {
+        return supportedLocale;
+      }
+    }
+
+    return supportedLocales.first;
   }
 }
