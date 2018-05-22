@@ -14,5 +14,7 @@ export 'src/data/base_data_service_provider.dart';
 export 'src/data/model.dart';
 export 'src/foundation/magic.dart';
 export 'src/helpers.dart';
+export 'src/lang/lang.dart';
+export 'src/lang/lang_delegate.dart';
 export 'src/routing/base_router_service_provider.dart';
 export 'src/routing/base_routes.dart';
