@@ -1,8 +1,8 @@
 name: magic
 description: A new magical flutter package.
 version: 0.0.1
-author:
-homepage:
+author: Anilcan Cakir <anilcan.cakir@gmail.com>
+homepage: https://github.com/anilcancakir/magic
 
 dependencies:
   flutter:
