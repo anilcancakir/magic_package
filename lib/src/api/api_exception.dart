@@ -65,7 +65,8 @@ class ApiException implements Exception {
         if (data != null && data is Map) {
           if (data.containsKey('error')) return true;
           if (data.containsKey('errors')) return true;
-          if (data.containsKey('success') && data['success'] == false) return true;
+          if (data.containsKey('success') && data['success'] == false)
+            return true;
         }
       }
     }

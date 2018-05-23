@@ -16,6 +16,7 @@ class BaseRouterServiceProvider extends ServiceProvider {
   @override
   void register(Magic magic) {
     // Set config
-    this.config.forEach((String key, dynamic value) => magic.make<MagicConfig>().set('route.$key', value));
+    this.config.forEach((String key, dynamic value) =>
+        magic.make<MagicConfig>().set('route.$key', value));
   }
 }

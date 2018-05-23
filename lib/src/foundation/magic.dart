@@ -74,21 +74,22 @@ class Magic {
   }
 
   /// Boot the magic's service providers.
-  Future<void> boot({
-    Map<String, dynamic> config,
-    Map<String, dynamic> environment
-  }) async {
+  Future<void> boot(
+      {Map<String, dynamic> config, Map<String, dynamic> environment}) async {
     if (this._booted) {
       return new Future.value();
     }
 
     // Set the configurations of app
-    config.forEach((String key, dynamic value) => this._setConfigIfNotNull('app.$key', value));
+    config.forEach((String key, dynamic value) =>
+        this._setConfigIfNotNull('app.$key', value));
 
     // Register the application providers.
-    List<ServiceProvider> providers = this.make<MagicConfig>().get('app.providers');
+    List<ServiceProvider> providers =
+        this.make<MagicConfig>().get('app.providers');
     if (providers != null) {
-      providers.forEach((ServiceProvider serviceProvider) => this.register(serviceProvider));
+      providers.forEach(
+          (ServiceProvider serviceProvider) => this.register(serviceProvider));
     }
 
     // Set the routes
@@ -104,31 +105,30 @@ class Magic {
 
     // Let's set the environment configurations
     if (environment != null) {
-      environment.forEach((String key, dynamic value) => this._setConfigIfNotNull(key, value));
+      environment.forEach(
+          (String key, dynamic value) => this._setConfigIfNotNull(key, value));
     }
 
     // Set application orientations
     SystemChrome.setPreferredOrientations(
-      this.make<MagicConfig>().get('app.orientations')
-    );
+        this.make<MagicConfig>().get('app.orientations'));
 
     // Run the app!
     runApp(new MaterialApp(
-      title: this.make<MagicConfig>().get('app.name'),
-      locale: this.make<MagicConfig>().get('app.locale'),
-      onGenerateRoute: this.make<Router>().generator,
-      supportedLocales: this.make<MagicConfig>().get('app.supportedLocales'),
-      localeResolutionCallback: this._localizationCallback,
-      localizationsDelegates: [
-        const LangDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ]
-    ));
+        title: this.make<MagicConfig>().get('app.name'),
+        locale: this.make<MagicConfig>().get('app.locale'),
+        onGenerateRoute: this.make<Router>().generator,
+        supportedLocales: this.make<MagicConfig>().get('app.supportedLocales'),
+        localeResolutionCallback: this._localizationCallback,
+        localizationsDelegates: [
+          const LangDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ]));
   }
 
   /// Set the magic's environment.
-  void setEnvironment(String environment ) {
+  void setEnvironment(String environment) {
     _environment = environment;
   }
 
@@ -164,9 +164,11 @@ class Magic {
   }
 
   /// Localization callback for application
-  Locale _localizationCallback(Locale locale, Iterable<Locale> supportedLocales) {
+  Locale _localizationCallback(
+      Locale locale, Iterable<Locale> supportedLocales) {
     for (Locale supportedLocale in supportedLocales) {
-      if (supportedLocale.languageCode == locale.languageCode || supportedLocale.countryCode == locale.countryCode) {
+      if (supportedLocale.languageCode == locale.languageCode ||
+          supportedLocale.countryCode == locale.countryCode) {
         return supportedLocale;
       }
     }

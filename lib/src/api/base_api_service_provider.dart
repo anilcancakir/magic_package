@@ -17,7 +17,8 @@ class BaseApiServiceProvider extends ServiceProvider {
   @override
   void register(Magic magic) {
     // Set config
-    this.config.forEach((String key, dynamic value) => magic.make<MagicConfig>().set('api.$key', value));
+    this.config.forEach((String key, dynamic value) =>
+        magic.make<MagicConfig>().set('api.$key', value));
 
     // Singleton auth instance
     magic.singleton<ApiClient>((Magic magic) => new ApiClient());

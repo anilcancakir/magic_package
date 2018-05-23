@@ -33,18 +33,14 @@ abstract class Model {
 
   /// Find the model by the given primary key.
   Future<Model> find(String primaryKey) async {
-    this.make(
-      await dataReceiver().get(this.resourceKey(), primaryKey)
-    );
+    this.make(await dataReceiver().get(this.resourceKey(), primaryKey));
 
     return this;
   }
 
   /// Refresh the current model.
   Future<Model> refresh() async {
-    return this.find(
-      this.getPrimaryKey()
-    );
+    return this.find(this.getPrimaryKey());
   }
 
   /// Determine if the model or given attribute(s) have been modified.
@@ -92,7 +88,8 @@ abstract class Model {
       Map<String, dynamic> result;
 
       if (this.exists) {
-        result = await dataReceiver().update(this.resourceKey(), this.getPrimaryKey().toString(), this._toData);
+        result = await dataReceiver().update(
+            this.resourceKey(), this.getPrimaryKey().toString(), this._toData);
       } else {
         result = await dataReceiver().create(this.resourceKey(), this._toData);
       }
@@ -106,9 +103,7 @@ abstract class Model {
 
   /// Get the value of the model's primary key.
   dynamic getPrimaryKey() {
-    return this.get(
-      this.primaryKey()
-    );
+    return this.get(this.primaryKey());
   }
 
   /// Set attributes and original values by the given.

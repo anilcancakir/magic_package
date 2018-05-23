@@ -14,9 +14,8 @@ class MaxValidator extends BaseValidator {
   @override
   String validate(BuildContext context, Object value, String attribute) {
     if (value is String && value.length > this._max) {
-      return this.message(context, attribute, replaces: {
-        'max': this._max.toString()
-      });
+      return this
+          .message(context, attribute, replaces: {'max': this._max.toString()});
     }
 
     return null;

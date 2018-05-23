@@ -14,9 +14,8 @@ class MinValidator extends BaseValidator {
   @override
   String validate(BuildContext context, Object value, String attribute) {
     if (value is String && value.length < this._min) {
-      return this.message(context, attribute, replaces: {
-        'min': this._min.toString()
-      });
+      return this
+          .message(context, attribute, replaces: {'min': this._min.toString()});
     }
 
     return null;

@@ -10,17 +10,14 @@ abstract class BaseValidator {
   String key();
 
   // Validation message
-  String message(BuildContext context, String attribute, {Map<String, String> replaces}) {
+  String message(BuildContext context, String attribute,
+      {Map<String, String> replaces}) {
     if (replaces == null) {
       replaces = {'attribute': trans(context, 'attribute.$attribute')};
     } else {
       replaces['attribute'] = trans(context, 'attribute.$attribute');
     }
 
-    return trans(
-      context,
-      'validation.${this.key()}',
-      replaces: replaces
-    );
+    return trans(context, 'validation.${this.key()}', replaces: replaces);
   }
 }

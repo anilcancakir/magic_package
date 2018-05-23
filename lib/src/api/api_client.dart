@@ -9,42 +9,47 @@ import 'api_exception.dart';
 class ApiClient {
   final RegExp _urlRegExp = new RegExp(r'^(?:(?:http|https|ftp):\/\/)');
   final http.Client _inner;
-  
-  ApiClient()
-  : this._inner = new http.Client();
+
+  ApiClient() : this._inner = new http.Client();
 
   Future<http.Response> delete(url, {Map<String, String> headers}) async {
-    return this._sendRequest(
-      this._inner.delete(this._setUrl(url), headers: await this._setHeaders(headers))
-    );
+    return this._sendRequest(this
+        ._inner
+        .delete(this._setUrl(url), headers: await this._setHeaders(headers)));
   }
 
-  Future<http.Response> patch(url, {Map<String, String> headers, body, Encoding encoding}) async {
-    return this._sendRequest(
-      this._inner.patch(this._setUrl(url), headers: await this._setHeaders(headers), body: body, encoding: encoding)
-    );
+  Future<http.Response> patch(url,
+      {Map<String, String> headers, body, Encoding encoding}) async {
+    return this._sendRequest(this._inner.patch(this._setUrl(url),
+        headers: await this._setHeaders(headers),
+        body: body,
+        encoding: encoding));
   }
 
-  Future<http.Response> put(url, {Map<String, String> headers, body, Encoding encoding}) async {
-    return this._sendRequest(
-      this._inner.put(this._setUrl(url), headers: await this._setHeaders(headers), body: body, encoding: encoding)
-    );
+  Future<http.Response> put(url,
+      {Map<String, String> headers, body, Encoding encoding}) async {
+    return this._sendRequest(this._inner.put(this._setUrl(url),
+        headers: await this._setHeaders(headers),
+        body: body,
+        encoding: encoding));
   }
 
-  Future<http.Response> post(url, {Map<String, String> headers, body, Encoding encoding}) async {
+  Future<http.Response> post(url,
+      {Map<String, String> headers, body, Encoding encoding}) async {
     print(this._setUrl(url));
 
-    return this._sendRequest(
-      this._inner.post(this._setUrl(url), headers: await this._setHeaders(headers), body: body, encoding: encoding)
-    );
+    return this._sendRequest(this._inner.post(this._setUrl(url),
+        headers: await this._setHeaders(headers),
+        body: body,
+        encoding: encoding));
   }
 
   Future<http.Response> get(url, {Map<String, String> headers}) async {
-    return this._sendRequest(
-      this._inner.get(this._setUrl(url), headers: await this._setHeaders(headers))
-    );
+    return this._sendRequest(this
+        ._inner
+        .get(this._setUrl(url), headers: await this._setHeaders(headers)));
   }
-  
+
   String _setUrl(String url) {
     if (this._urlRegExp.hasMatch(url)) {
       return url;

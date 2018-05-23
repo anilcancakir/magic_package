@@ -12,9 +12,8 @@ class Auth {
 
   Guard get guard {
     if (this._guard == null) {
-      this._guard = this.availableGuards[
-        this._magic.make<MagicConfig>().get('auth.default')
-      ];
+      this._guard = this
+          .availableGuards[this._magic.make<MagicConfig>().get('auth.default')];
     }
 
     return this._guard;
