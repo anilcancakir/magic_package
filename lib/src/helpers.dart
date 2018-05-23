@@ -173,6 +173,7 @@ void showError(BuildContext context, String error) {
   );
 }
 
+/// Pop all routes and replace
 void replaceTo(BuildContext context, String routeName) {
   while (Navigator.of(context).canPop()) {
     Navigator.pop(context);
@@ -181,6 +182,7 @@ void replaceTo(BuildContext context, String routeName) {
   Navigator.of(context).pushReplacementNamed(routeName);
 }
 
+/// Redirect to current page
 void redirectTo(BuildContext context, String routeName) {
   Navigator.of(context).pushNamed(routeName);
 }
