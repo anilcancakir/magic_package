@@ -4,25 +4,25 @@ import 'package:magic/magic.dart';
 class IndexWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    this.test();
-
     return new Scaffold(
       appBar: new AppBar(title: new Text(
         config('app.name')
       )),
-      body: new Container(
-        child: new Center(
-          child: new Text(trans(context, 'hello_world')),
-        ),
+      body: new ListView(
+        children: <Widget>[
+          new ListTile(
+            title: new RaisedButton(
+              child: new Text(trans(context, 'auth.logout')),
+              onPressed: () => this._clickLogout(context),
+            ),
+          )
+        ],
       ),
     );
   }
 
-  void test() async {
+  void _clickLogout(BuildContext context) {
     guard().logout();
-
-//    print({
-//      'attempt': await guard().attempt({'email': 'foo@bar.com', 'password': 'secretpassword'})
-//    });
+    replaceTo(context, '/auth/login');
   }
 }

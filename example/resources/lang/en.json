@@ -6,6 +6,9 @@
 
   "auth.login": "Login",
   "auth.failed": "These credentials do not match our records.",
+  "auth.register": "Register",
+  "auth.register.failed": "The server can't complete the register request.",
+  "auth.logout": "Logout",
 
   "attribute.email": "E-mail Address",
   "attribute.password": "Password",

@@ -172,3 +172,15 @@ void showError(BuildContext context, String error) {
     ]
   );
 }
+
+void replaceTo(BuildContext context, String routeName) {
+  while (Navigator.of(context).canPop()) {
+    Navigator.pop(context);
+  }
+
+  Navigator.of(context).pushReplacementNamed(routeName);
+}
+
+void redirectTo(BuildContext context, String routeName) {
+  Navigator.of(context).pushNamed(routeName);
+}

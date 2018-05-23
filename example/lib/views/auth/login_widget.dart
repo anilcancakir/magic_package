@@ -8,14 +8,9 @@ class LoginWidget extends StatefulWidget {
   }
 }
 
-class _LoginData {
-  String email;
-  String password;
-}
-
 class _LoginWidgetState extends State<LoginWidget> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  _LoginData _data = new _LoginData();
+  Map<String, String> _data = {'email': '', 'password': ''};
 
   void _submit(BuildContext context) async {
     if (_formKey.currentState.validate()) {
@@ -23,13 +18,11 @@ class _LoginWidgetState extends State<LoginWidget> {
       showLoader(context);
 
       try {
-        bool success = await guard().attempt({
-          'email': this._data.email,
-          'password': this._data.password
-        });
+        bool success = await guard().attempt(this._data);
+        hideLoader(context);
 
         if (success) {
-          hideLoader(context);
+          replaceTo(context, '/');
         } else {
           showError(context, trans(context, 'auth.failed'));
         }
@@ -55,7 +48,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               input: new Input(
                 name: 'email',
                 type: InputType.email,
-                onSaved: (String value) => this._data.email = value,
+                onSaved: (String value) => this._data['email'] = value,
                 validators: [
                   new RequiredValidator(),
                   new EmailValidator()
@@ -66,7 +59,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               input: new Input(
                 name: 'password',
                 type: InputType.password,
-                onSaved: (String value) => this._data.password = value,
+                onSaved: (String value) => this._data['password'] = value,
                 validators: [
                   new RequiredValidator()
                 ],
@@ -76,6 +69,12 @@ class _LoginWidgetState extends State<LoginWidget> {
               input: new RaisedButton(
                 child: new Text(trans(context, 'auth.login')),
                 onPressed: () => this._submit(context),
+              ),
+            ),
+            new FormItem(
+              input: new FlatButton(
+                child: new Text(trans(context, 'auth.register')),
+                onPressed: () => redirectTo(context, '/auth/register'),
               ),
             )
           ],

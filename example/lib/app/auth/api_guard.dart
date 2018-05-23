@@ -48,12 +48,8 @@ class ApiGuard extends Guard {
   /// Try to register and login with the new user.
   @override
   Future<bool> register(Map<String, dynamic> credentials) async {
-    try {
-      final response = await apiClient().post('/auth/register', body: credentials);
-      this._setUserFromResponse(response);
-    } catch (e) {
-      return false;
-    }
+    final response = await apiClient().post('/auth/register', body: credentials);
+    this._setUserFromResponse(response);
 
     return true;
   }

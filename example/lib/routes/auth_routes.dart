@@ -8,5 +8,9 @@ class AuthRoutes extends BaseRoutes {
     router.define('/auth/login', handler: new Handler(handlerFunc: (_, __) {
       return new AuthController().login();
     }));
+
+    router.define('/auth/register', handler: new Handler(handlerFunc: (_, __) {
+      return new AuthController().register();
+    }));
   }
 }

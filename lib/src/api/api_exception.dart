@@ -59,12 +59,14 @@ class ApiException implements Exception {
     if (response != null) {
       if (response.statusCode >= 400) return true;
 
-      Map<String, dynamic> data = json.decode(response.body);
+      if (response.body != null) {
+        dynamic data = json.decode(response.body);
 
-      if (data != null) {
-        if (data.containsKey('error')) return true;
-        if (data.containsKey('errors')) return true;
-        if (data.containsKey('success') && data['success'] == false) return true;
+        if (data != null && data is Map) {
+          if (data.containsKey('error')) return true;
+          if (data.containsKey('errors')) return true;
+          if (data.containsKey('success') && data['success'] == false) return true;
+        }
       }
     }
 
