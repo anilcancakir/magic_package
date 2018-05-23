@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:magic/src/foundation/magic.dart';
 
 import '../config/magic_config.dart';
@@ -8,8 +10,8 @@ class BaseDataServiceProvider extends ServiceProvider {
   Map<String, dynamic> config = new Map<String, dynamic>();
 
   @override
-  void boot(Magic magic) {
-
+  Future<void> boot(Magic magic) {
+    return new Future.value();
   }
 
   @override

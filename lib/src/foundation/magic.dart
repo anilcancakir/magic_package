@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../config/magic_config.dart';
 import '../contracts/support/service_provider.dart';
@@ -70,12 +74,12 @@ class Magic {
   }
 
   /// Boot the magic's service providers.
-  void boot({
+  Future<void> boot({
     Map<String, dynamic> config,
     Map<String, dynamic> environment
-  }) {
+  }) async {
     if (this._booted) {
-      return;
+      return new Future.value();
     }
 
     // Set the configurations of app
@@ -94,12 +98,19 @@ class Magic {
     }
 
     // Boot the registered providers.
-    this._serviceProviders.forEach(this._bootRegisterProvider);
+    for (ServiceProvider serviceProvider in this._serviceProviders) {
+      await this._bootRegisterProvider(serviceProvider);
+    }
 
     // Let's set the environment configurations
     if (environment != null) {
       environment.forEach((String key, dynamic value) => this._setConfigIfNotNull(key, value));
     }
+
+    // Set application orientations
+    SystemChrome.setPreferredOrientations(
+      this.make<MagicConfig>().get('app.orientations')
+    );
 
     // Run the app!
     runApp(new MaterialApp(
@@ -134,14 +145,15 @@ class Magic {
   }
 
   /// Boot the given service provider.
-  void _bootRegisterProvider(ServiceProvider serviceProvider) {
-    serviceProvider.boot(this);
+  Future<void> _bootRegisterProvider(ServiceProvider serviceProvider) {
+    return serviceProvider.boot(this);
   }
 
   /// Register the core bindings in the magic.
   void _registerCoreBindings() {
     this.singleton<MagicConfig>((_) => new MagicConfig());
     this.singleton<Router>((_) => new Router());
+    this.singleton<FlutterSecureStorage>((_) => new FlutterSecureStorage());
   }
 
   /// Set the config variable if the value is not null.

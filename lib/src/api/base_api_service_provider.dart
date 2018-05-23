@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:magic/src/foundation/magic.dart';
 
 import '../config/magic_config.dart';
@@ -8,8 +10,8 @@ class BaseApiServiceProvider extends ServiceProvider {
   Map<String, dynamic> config = new Map<String, dynamic>();
 
   @override
-  void boot(Magic magic) {
-
+  Future<void> boot(Magic magic) {
+    return new Future.value();
   }
 
   @override
@@ -18,8 +20,6 @@ class BaseApiServiceProvider extends ServiceProvider {
     this.config.forEach((String key, dynamic value) => magic.make<MagicConfig>().set('api.$key', value));
 
     // Singleton auth instance
-    magic.singleton<ApiClient>((Magic magic) => new ApiClient(
-      magic.make<MagicConfig>().get('api.url')
-    ));
+    magic.singleton<ApiClient>((Magic magic) => new ApiClient());
   }
 }

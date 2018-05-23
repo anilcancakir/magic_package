@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'api/api_client.dart';
 import 'auth/auth.dart';
@@ -12,6 +13,10 @@ import 'lang/lang.dart';
 import 'validators/base_validator.dart';
 
 typedef dynamic FetchModelMapCallback(dynamic data);
+
+/// The cache keys.
+final authUserCacheKey = 'auth.user';
+final authBearerTokenCacheKey = 'auth.token';
 
 /// Resolve the given type from the magic.
 T make<T>() {
@@ -66,7 +71,7 @@ String trans(BuildContext context, String key, {Map<String, String> replaces}) {
   return Lang.of(context).trans(key, replaces: replaces);
 }
 
-// Let's validate!
+/// Let's validate!
 String validates(BuildContext context, Object value, String attribute, List<BaseValidator> validators) {
   String result;
 
@@ -77,4 +82,24 @@ String validates(BuildContext context, Object value, String attribute, List<Base
   });
 
   return result;
+}
+
+/// Get instance of the secure storage.
+FlutterSecureStorage secureStorage() {
+  return make<FlutterSecureStorage>();
+}
+
+/// Get cache variable.
+Future<String> cache(String key) {
+  return secureStorage().read(key: key);
+}
+
+/// Set cache variable.
+Future<void> cacheSet(String key, String value) {
+  return secureStorage().write(key: key, value: value);
+}
+
+/// Delete cache variable.
+Future<void> cacheDelete(String key) {
+  return secureStorage().delete(key: key);
 }

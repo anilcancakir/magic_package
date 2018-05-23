@@ -26,4 +26,10 @@ abstract class Guard {
 
   /// Log the user out of the application.
   void logout();
+
+  /// Set the current user.
+  void setCurrentUser(dynamic data);
+
+  /// Set the bearer token.
+  void setBearerToken(String token);
 }

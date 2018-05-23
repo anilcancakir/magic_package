@@ -1,4 +1,3 @@
-import 'package:app/app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:magic/magic.dart';
 
@@ -20,14 +19,11 @@ class IndexWidget extends StatelessWidget {
   }
 
   void test() async {
-    User user = await new User().find('skHSFN0A73R4U94QpU7TciiKMxU2');
-    print(user);
+    print(auth().check());
+    print(auth().user());
 
-    user.set('name', 'Anilcan Cakir');
-    await user.save();
-
-    print(user);
-
-    fetchModels((data) => new User().make(data)).then(print);
+//    print({
+//      'attempt': await guard().attempt({'email': 'foo@bar.com', 'password': 'secretpassword'})
+//    });
   }
 }

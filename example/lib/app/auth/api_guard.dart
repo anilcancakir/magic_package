@@ -15,12 +15,8 @@ class ApiGuard extends Guard {
   /// Attempt to login.
   @override
   Future<bool> attempt(Map<String, dynamic> credentials) async {
-    try {
-      final response = await apiClient().post('/auth/login', body: credentials);
-      this._setUserFromResponse(response);
-    } catch (e) {
-      return false;
-    }
+    final response = await apiClient().post('/auth/login', body: credentials);
+    this._setUserFromResponse(response);
 
     return true;
   }
@@ -44,6 +40,9 @@ class ApiGuard extends Guard {
 
     this._currentUser = null;
     this._bearerToken = null;
+
+    cacheDelete(authUserCacheKey);
+    cacheDelete(authBearerTokenCacheKey);
   }
 
   /// Try to register and login with the new user.
@@ -67,6 +66,24 @@ class ApiGuard extends Guard {
 
   /// Set the current user from response.
   void _setUserFromResponse(http.Response response) {
-    this._currentUser = json.decode(response.body);
+    print(response.body);
+
+    Map<String, dynamic> data = json.decode(response.body);
+
+    this._currentUser = new User().make(data['data']);
+    this._bearerToken = data['meta']['token'];
+
+    cacheSet(authUserCacheKey, json.encode(data['data']));
+    cacheSet(authBearerTokenCacheKey, this._bearerToken);
+  }
+
+  /// Set the current user.
+  void setCurrentUser(dynamic data) {
+    this._currentUser = new User().make(data);
+  }
+
+  /// Set the bearer token.
+  void setBearerToken(String token) {
+    this._bearerToken = token;
   }
 }
