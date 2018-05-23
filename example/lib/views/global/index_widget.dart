@@ -19,8 +19,7 @@ class IndexWidget extends StatelessWidget {
   }
 
   void test() async {
-    print(auth().check());
-    print(auth().user());
+    guard().logout();
 
 //    print({
 //      'attempt': await guard().attempt({'email': 'foo@bar.com', 'password': 'secretpassword'})

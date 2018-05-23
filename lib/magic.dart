@@ -1,6 +1,7 @@
 library magic;
 
 export 'src/api/api_client.dart';
+export 'src/api/api_exception.dart';
 export 'src/api/base_api_service_provider.dart';
 export 'src/auth/auth.dart';
 export 'src/auth/base_auth_service_provider.dart';

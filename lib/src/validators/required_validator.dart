@@ -10,14 +10,11 @@ class RequiredValidator extends BaseValidator {
 
   @override
   String validate(BuildContext context, Object value, String attribute) {
-    if (value is String && value.length > 0) {
-      return null;
+    // If is string
+    if (value is String && value.length <= 0) {
+      return this.message(context, attribute);
     }
 
-    if (value != null) {
-      return null;
-    }
-
-    return this.message(context, attribute);
+    return value == null ? this.message(context, attribute) : null;
   }
 }

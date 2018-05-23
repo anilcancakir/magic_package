@@ -30,6 +30,26 @@ class ApiException implements Exception {
   String get message => _message;
   int get code => _code;
 
+  String getFirstError() {
+    if (this._errors != null) {
+      return ApiException._getFirstErrorInErrors(this._errors);
+    }
+
+    return this.message;
+  }
+
+  static dynamic _getFirstErrorInErrors(dynamic errors) {
+    if (errors is List) {
+      return ApiException._getFirstErrorInErrors(errors.first);
+    }
+
+    if (errors is Map) {
+      return ApiException._getFirstErrorInErrors(errors[errors.keys.first]);
+    }
+
+    return errors;
+  }
+
   @override
   String toString() {
     return 'ApiException{_code: $_code, _message: $_message, _errors: $_errors}';

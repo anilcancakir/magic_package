@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:progress_hud/progress_hud.dart';
 
 import 'api/api_client.dart';
 import 'auth/auth.dart';
@@ -17,6 +19,9 @@ typedef dynamic FetchModelMapCallback(dynamic data);
 /// The cache keys.
 final authUserCacheKey = 'auth.user';
 final authBearerTokenCacheKey = 'auth.token';
+
+/// The loader is showing?
+bool _loaderShowing = false;
 
 /// Resolve the given type from the magic.
 T make<T>() {
@@ -89,6 +94,12 @@ FlutterSecureStorage secureStorage() {
   return make<FlutterSecureStorage>();
 }
 
+
+/// Get instance of the router.
+Router router() {
+  return make<Router>();
+}
+
 /// Get cache variable.
 Future<String> cache(String key) {
   return secureStorage().read(key: key);
@@ -102,4 +113,62 @@ Future<void> cacheSet(String key, String value) {
 /// Delete cache variable.
 Future<void> cacheDelete(String key) {
   return secureStorage().delete(key: key);
+}
+
+/// Let's start to show the loader
+void showLoader(BuildContext context) {
+  _loaderShowing = true;
+
+  showDialog(context: context, builder: (BuildContext context) => new ProgressHUD(
+    color: Colors.white,
+    containerColor: Theme.of(context).primaryColor,
+  ));
+}
+
+/// Hide the loader.
+void hideLoader(BuildContext context) {
+  if (_loaderShowing) {
+    _loaderShowing = false;
+
+    Navigator.pop(context);
+  }
+}
+
+// Show snackBar
+void showSnackBar(BuildContext context, Widget title, {Widget content, List<Widget> actions}) {
+  showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
+    title: title,
+    content: content,
+    actions: actions,
+  ));
+}
+
+/// Show error
+void showError(BuildContext context, String error) {
+  hideLoader(context);
+
+  showSnackBar(
+    context,
+    new Text(
+      Lang.of(context).trans('error'),
+      style: new TextStyle(color: Theme.of(context).errorColor),
+    ),
+    content: new SingleChildScrollView(
+      child: new Text(error)
+    ),
+    actions: <Widget>[
+      new FlatButton(
+        child: new Text(
+          Lang.of(context).trans('ok'),
+          style: new TextStyle(
+            color: Colors.white
+          ),
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        color: Theme.of(context).errorColor,
+      ),
+    ]
+  );
 }
