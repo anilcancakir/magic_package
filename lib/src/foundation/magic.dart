@@ -12,7 +12,6 @@ import '../lang/lang_delegate.dart';
 import '../routing/base_routes.dart';
 
 typedef Object MagicConcreteCallback(Magic magic);
-typedef void VoidCallback();
 
 class Magic {
   /// The current globally available magic (if any).
@@ -74,23 +73,27 @@ class Magic {
   }
 
   /// Boot the magic's service providers.
-  Future<void> boot(
-      {Map<String, dynamic> config, Map<String, dynamic> environment}) async {
+  Future<void> boot({Map<String, dynamic> config, Map<String, dynamic> environment}) async {
     if (this._booted) {
       return new Future.value();
     }
 
     // Set the configurations of app
-    config.forEach((String key, dynamic value) =>
-        this._setConfigIfNotNull('app.$key', value));
+    config.forEach((String key, dynamic value) => this._setConfigIfNotNull('app.$key', value));
 
     // Register the application providers.
-    List<ServiceProvider> providers =
-        this.make<MagicConfig>().get('app.providers');
+    List<ServiceProvider> providers = this.make<MagicConfig>().get('app.providers');
     if (providers != null) {
-      providers.forEach(
-          (ServiceProvider serviceProvider) => this.register(serviceProvider));
+      providers.forEach((ServiceProvider serviceProvider) => this.register(serviceProvider));
     }
+
+    // Let's set the environment configurations
+    if (environment != null) {
+      environment.forEach((String key, dynamic value) => this._setConfigIfNotNull(key, value));
+    }
+
+    // Set application environment from config
+    setEnvironment(this.make<MagicConfig>().get('app.env'));
 
     // Set the routes
     List<BaseRoutes> routes = this.make<MagicConfig>().get('route.routes');
@@ -103,15 +106,8 @@ class Magic {
       await this._bootRegisterProvider(serviceProvider);
     }
 
-    // Let's set the environment configurations
-    if (environment != null) {
-      environment.forEach(
-          (String key, dynamic value) => this._setConfigIfNotNull(key, value));
-    }
-
     // Set application orientations
-    SystemChrome.setPreferredOrientations(
-        this.make<MagicConfig>().get('app.orientations'));
+    SystemChrome.setPreferredOrientations(this.make<MagicConfig>().get('app.orientations'));
 
     // Run the app!
     runApp(new MaterialApp(
@@ -120,6 +116,7 @@ class Magic {
         onGenerateRoute: this.make<Router>().generator,
         supportedLocales: this.make<MagicConfig>().get('app.supportedLocales'),
         localeResolutionCallback: this._localizationCallback,
+        theme: this.make<MagicConfig>().get('app.theme'),
         localizationsDelegates: [
           const LangDelegate(),
           GlobalMaterialLocalizations.delegate,
@@ -164,8 +161,8 @@ class Magic {
   }
 
   /// Localization callback for application
-  Locale _localizationCallback(
-      Locale locale, Iterable<Locale> supportedLocales) {
+  Locale _localizationCallback(Locale locale,
+      Iterable<Locale> supportedLocales) {
     for (Locale supportedLocale in supportedLocales) {
       if (supportedLocale.languageCode == locale.languageCode ||
           supportedLocale.countryCode == locale.countryCode) {

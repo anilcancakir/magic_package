@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:validator/validator.dart';
 
 import 'base_validator.dart';
+import 'package.dart';
 
 class EmailValidator extends BaseValidator {
   @override

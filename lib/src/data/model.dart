@@ -63,7 +63,31 @@ abstract class Model {
 
   /// Get an attribute from the model.
   dynamic get(String key) {
-    return this._attributes[key];
+    if (this.has(key)) {
+      return this._attributes[key];
+    }
+
+    return null;
+  }
+
+  /// The given attribute is exists.
+  bool has(String key) {
+    return this._attributes.containsKey(key);
+  }
+
+  /// The given attribute is not exists.
+  bool hasNot(String key) {
+    return this.has(key) == false;
+  }
+
+  /// The given attribute is null or not exists.
+  bool isNull(String key) {
+    return this.hasNot(key) || this._attributes[key] == null;
+  }
+
+  /// The given attribute is not null and exists.
+  bool isNotNull(String key) {
+    return this.isNull(key) == false;
   }
 
   /// Set a given attribute on the model.
@@ -84,7 +108,7 @@ abstract class Model {
 
   /// Save the model to the database.
   Future<bool> save() async {
-    if (this.isDirty()) {
+    if (this.isDirty() || !this.exists) {
       Map<String, dynamic> result;
 
       if (this.exists) {

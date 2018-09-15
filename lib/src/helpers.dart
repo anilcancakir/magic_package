@@ -13,6 +13,7 @@ import 'data/base_data_receiver.dart';
 import 'foundation/magic.dart';
 import 'lang/lang.dart';
 import 'validators/base_validator.dart';
+import 'data/model.dart';
 
 typedef dynamic FetchModelMapCallback(dynamic data);
 
@@ -43,6 +44,15 @@ Auth auth() {
   return make<Auth>();
 }
 
+/// Get the current user model.
+Model user() {
+  if (auth().check()) {
+    return auth().user();
+  }
+
+  return null;
+}
+
 /// Get the base data receiver instance.
 BaseDataReceiver dataReceiver() {
   return make<BaseDataReceiver>();
@@ -54,10 +64,12 @@ ApiClient apiClient() {
 }
 
 /// Fetch the models by the given queries.
-Future<List<T>> fetchModels<T>(FetchModelMapCallback mapCallback, {Map<String, dynamic> queries}) async {
+Future<List<T>> fetchModels<T>(FetchModelMapCallback mapCallback,
+  {Map<String, dynamic> queries}) async {
   final List<T> models = new List<T>();
 
-  (await fetchItems(mapCallback(null).resourceKey(), queries: queries)).forEach((dynamic data) {
+  (await fetchItems(mapCallback(null).resourceKey(), queries: queries))
+    .forEach((dynamic data) {
     models.add(
       mapCallback(data)
     );
@@ -67,7 +79,8 @@ Future<List<T>> fetchModels<T>(FetchModelMapCallback mapCallback, {Map<String, d
 }
 
 /// Fetch the data from the given resource key.
-Future<List<dynamic>> fetchItems(String resourceKey, {Map<String, dynamic> queries}) async {
+Future<List<dynamic>> fetchItems(String resourceKey,
+  {Map<String, dynamic> queries}) async {
   return await dataReceiver().index(resourceKey, queries: queries);
 }
 
@@ -77,7 +90,8 @@ String trans(BuildContext context, String key, {Map<String, String> replaces}) {
 }
 
 /// Let's validate!
-String validates(BuildContext context, Object value, String attribute, List<BaseValidator> validators) {
+String validates(BuildContext context, Object value, String attribute,
+  List<BaseValidator> validators) {
   String result;
 
   validators.takeWhile((BaseValidator validator) {
@@ -93,7 +107,6 @@ String validates(BuildContext context, Object value, String attribute, List<Base
 FlutterSecureStorage secureStorage() {
   return make<FlutterSecureStorage>();
 }
-
 
 /// Get instance of the router.
 Router router() {
@@ -119,10 +132,24 @@ Future<void> cacheDelete(String key) {
 void showLoader(BuildContext context) {
   _loaderShowing = true;
 
-  showDialog(context: context, builder: (BuildContext context) => new ProgressHUD(
+  showDialog(context: context,
+    builder: (BuildContext context) => getLoaderWidget(context));
+}
+
+/// Get the loader widget
+Widget getLoaderWidget(BuildContext context, {bool withScaffold: false}) {
+  if (withScaffold) {
+    return new Scaffold(
+      body: getLoaderWidget(context),
+    );
+  }
+
+  return new ProgressHUD(
     color: Colors.white,
-    containerColor: Theme.of(context).primaryColor,
-  ));
+    containerColor: Theme
+      .of(context)
+      .primaryColor,
+  );
 }
 
 /// Hide the loader.
@@ -135,26 +162,74 @@ void hideLoader(BuildContext context) {
 }
 
 // Show snackBar
-void showSnackBar(BuildContext context, Widget title, {Widget content, List<Widget> actions}) {
-  showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
+void showSnackBar(BuildContext context, Widget title,
+  {Widget content, List<Widget> actions}) {
+  showDialog(context: context, builder: (BuildContext context) =>
+  new AlertDialog(
     title: title,
     content: content,
     actions: actions,
-  ));
+  )
+  );
 }
 
 /// Show error
-void showError(BuildContext context, String error) {
+void showError(BuildContext context,
+  String content,
+  {
+    WidgetBuilder onClicked
+  }) {
+  hideLoader(context);
+
+  showResultAlert(
+    context,
+    trans(context, 'error'),
+    content,
+    Theme
+      .of(context)
+      .errorColor,
+    onClicked: onClicked
+  );
+}
+
+
+/// Show error
+void showSuccess(BuildContext context,
+  String content,
+  {
+    WidgetBuilder onClicked
+  }) {
+  hideLoader(context);
+
+  showResultAlert(
+    context,
+    trans(context, 'success'),
+    content,
+    Theme
+      .of(context)
+      .primaryColor,
+    onClicked: onClicked
+  );
+}
+
+/// Show result alert
+void showResultAlert(BuildContext context,
+  String title,
+  String content,
+  Color color,
+  {
+    WidgetBuilder onClicked
+  }) {
   hideLoader(context);
 
   showSnackBar(
     context,
     new Text(
-      Lang.of(context).trans('error'),
-      style: new TextStyle(color: Theme.of(context).errorColor),
+      title,
+      style: new TextStyle(color: color),
     ),
     content: new SingleChildScrollView(
-      child: new Text(error)
+      child: new Text(content)
     ),
     actions: <Widget>[
       new FlatButton(
@@ -166,23 +241,31 @@ void showError(BuildContext context, String error) {
         ),
         onPressed: () {
           Navigator.of(context).pop();
+
+          if (onClicked != null) {
+            onClicked(context);
+          }
         },
-        color: Theme.of(context).errorColor,
+        color: color,
       ),
     ]
   );
 }
 
 /// Pop all routes and replace
-void replaceTo(BuildContext context, String routeName) {
+void replaceTo(BuildContext context, String routeName,
+  {TransitionType transition = TransitionType.native}) {
   while (Navigator.of(context).canPop()) {
     Navigator.pop(context);
   }
 
-  Navigator.of(context).pushReplacementNamed(routeName);
+  router().navigateTo(
+    context, routeName, replace: true, transition: transition);
 }
 
 /// Redirect to current page
-void redirectTo(BuildContext context, String routeName) {
-  Navigator.of(context).pushNamed(routeName);
+void redirectTo(BuildContext context, String routeName,
+  {TransitionType transition = TransitionType.native}) {
+  router().navigateTo(
+    context, routeName, replace: false, transition: transition);
 }

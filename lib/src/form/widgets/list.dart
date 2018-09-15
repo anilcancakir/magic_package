@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class FormList extends StatelessWidget {
-  final List<FormItem> items;
+  final List<Widget> items;
+  final EdgeInsetsGeometry padding;
 
-  FormList({@required this.items});
+  FormList({@required this.items, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return new ListView(
+      padding: padding,
       children: this.items
     );
   }

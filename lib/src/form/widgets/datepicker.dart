@@ -53,7 +53,9 @@ class DatePicker extends StatelessWidget {
               lastDate: this.endDate
             );
 
-            field.didChange(value);
+            if (value != null) {
+              field.didChange(value);
+            }
           },
         );
       },

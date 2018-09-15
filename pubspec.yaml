@@ -16,17 +16,18 @@ dependencies:
   meta: "^1.1.5"
   intl: "^0.15.6"
   fluro: "^1.3.1"
-  progress_hud: "^0.2.2"
-  validator: "^0.0.7"
+  progress_hud: "^1.1.0"
   http: "^0.11.3+16"
   flutter_secure_storage: "^3.1.0"
+  image_picker: ^0.4.10
+  image_cropper: ^0.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 environment:
-  sdk: ">=1.19.0 <2.0.0"
+  sdk: ">=1.19.0 <=2.1.0"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

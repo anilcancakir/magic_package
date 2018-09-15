@@ -25,5 +25,8 @@
   "validation.max": "The :attribute may not be greater than :max characters.",
   "validation.min": "The :attribute must be at least :min characters.",
   "validation.password": "The :attribute must contains at least one uppercase char and one number.",
-  "validation.confirmed": "The :attribute confirmation does not match."
+  "validation.confirmed": "The :attribute confirmation does not match.",
+
+  "camera": "Camera",
+  "gallery": "Gallery"
 }

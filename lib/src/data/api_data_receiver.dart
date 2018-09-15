@@ -9,7 +9,7 @@ import 'base_data_receiver.dart';
 class ApiDataReceiver extends BaseDataReceiver {
   @override
   Future create(String resource, Map<String, dynamic> data) async {
-    return this._decode(await apiClient().post(resource, body: data));
+    return this._decode(await apiClient().post(resource + config('api.create'), body: data));
   }
 
   @override

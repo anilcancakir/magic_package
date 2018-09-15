@@ -5,7 +5,7 @@ import '../../helpers.dart';
 import '../../validators/base_validator.dart';
 
 enum InputType {
-  string, number, email, password, phone
+  string, number, email, password, phone, multiline
 }
 
 class Input extends StatelessWidget {
@@ -40,6 +40,10 @@ class Input extends StatelessWidget {
         keyboardType = TextInputType.phone;
         break;
 
+      case InputType.multiline:
+        keyboardType = TextInputType.multiline;
+        break;
+
       case InputType.string:
       default:
         keyboardType = TextInputType.text;
@@ -56,6 +60,7 @@ class Input extends StatelessWidget {
       obscureText: obscureText,
       initialValue: this.value,
       onSaved: this.onSaved,
+      maxLines: this.type == InputType.multiline ? null : 1,
       decoration: new InputDecoration(
         hintText: trans(context, 'hint.${this.name}'),
         labelText: trans(context, 'attribute.${this.name}')
